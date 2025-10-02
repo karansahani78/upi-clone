@@ -33,6 +33,9 @@ public class Account {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private AppUser user;
+    @ManyToOne
+    @JoinColumn(name = "bank_account_id", nullable = false)
+    private BankAccount bankAccount;
 
     @NotNull(message = "Account must have an active status")
     private Boolean isActive = true;
