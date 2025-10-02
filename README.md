@@ -1,6 +1,6 @@
 # UPI Clone Backend
 
-A Spring Boot-based backend application simulating UPI payment system with JWT authentication, user registration, and transaction processing.
+A Spring Boot-based backend application simulating UPI payment system with JWT authentication, user registration, account management, and transaction processing.
 
 ---
 
@@ -22,6 +22,7 @@ This project allows users to:
 
 * Register and create UPI accounts
 * Login with JWT-based authentication
+* Link accounts with bank accounts
 * Make transactions using virtual payment addresses (VPA)
 * Ensure secure payments and account management
 
@@ -111,7 +112,11 @@ mvn spring-boot:run
   "account": {
     "vpa": "karan@upi",
     "balance": 5000.0,
-    "isActive": true
+    "isActive": true,
+    "bankAccount": {
+      "accountNumber": "1234567890",
+      "ifscCode": "HDFC0001234"
+    }
   }
 }
 ```
@@ -166,6 +171,7 @@ password=password123
 
 * **AppUser**: Entity representing user details.
 * **Account**: Entity representing UPI account and balance.
+* **BankAccount**: Entity representing linked bank account.
 * **Transaction**: Entity representing payment transactions.
 * **AuthService**: Handles user registration.
 * **TransactionService**: Handles payment processing.
@@ -180,7 +186,7 @@ password=password123
 1. User sends payment request with JWT.
 2. `JwtFilter` validates token.
 3. `TransactionController` forwards request to `TransactionService`.
-4. `TransactionService` validates accounts & balance.
+4. `TransactionService` validates accounts, bank accounts & balance.
 5. Deducts from sender and credits receiver.
 6. Transaction saved in DB and returned.
 
@@ -191,6 +197,7 @@ password=password123
 ```mermaid
 classDiagram
     AppUser --> Account : owns
+    Account --> BankAccount : linked
     Account --> Transaction : initiates
     TransactionService --> Transaction : creates
     AuthController --> AuthService : registers user
@@ -198,6 +205,8 @@ classDiagram
     JwtFilter --> SecurityContextHolder : sets authentication
 ```
 
-License
+---
+
+## License
 
 This project is open-source and free to use for learning and development purposes.
